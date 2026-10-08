@@ -323,3 +323,193 @@ select* from usuario;
 select * from livro;
 select * from emprestimo;
 
+create database ex08;
+use ex08;
+
+-- Proponha CLIENTE, NOTA_FISCAL, PRODUTO e ITEM_NOTA
+
+create table cliente(
+    cnpj_cliente int not null,
+    nome_cliente varchar(50),
+    
+    constraint pk_aluno primary key (cnpj_cliente)
+);
+
+create table nota_fiscal(
+	id int auto_increment,
+    data_nota date default(current_date),
+    cnpj_clt int not null,
+
+	constraint pk_nota primary key(id),
+    constraint fk_cnpj foreign key (cnpj_clt) references cliente(cnpj_cliente)
+);
+
+create table produto(
+	id int auto_increment,
+    descricao varchar(70),
+    valor numeric(10,2),
+    
+    constraint pk_produto primary key (id)
+);
+create table item_nota(
+	id_nota int not null,
+    id_produto int not null,
+    qtd int not null,
+    
+    constraint pk_item_nota primary key(id_nota, id_produto),
+    constraint fk_nota foreign key (id_nota) references nota_fiscal(id),
+	constraint fk_produto foreign key (id_produto) references produto(id)
+
+);
+
+INSERT INTO cliente (cnpj_cliente, nome_cliente) VALUES
+(111111111, 'Mercado Sol'),
+(222222222, 'Supermercado Bom Preco'),
+(333333333, 'Mercado Central');
+
+INSERT INTO nota_fiscal (cnpj_clt) VALUES
+(111111111),
+(222222222),
+(333333333);
+
+INSERT INTO produto (descricao, valor) VALUES
+('Arroz 5kg', 28.00),
+('Feijao 1kg', 8.50),
+('Macarrao 500g', 5.00),
+('Cafe 500g', 18.90),
+('Acucar 1kg', 4.50);
+
+INSERT INTO item_nota (id_nota, id_produto, qtd) VALUES
+(1, 1, 2),
+(1, 2, 3),
+(1, 4, 1),
+(2, 1, 1),
+(2, 3, 4),
+(3, 2, 2),
+(3, 5, 5);
+
+
+SELECT *
+FROM cliente;
+
+SELECT *
+FROM nota_fiscal;
+
+SELECT *
+FROM produto;
+
+SELECT *
+FROM item_nota;
+
+create database ex09;
+use ex09;
+
+create table curso(
+	id int auto_increment,
+    nome varchar(50),
+    
+    constraint pk_curso primary key (id)
+);
+
+create table instrutor(
+	id int auto_increment,
+    nome varchar(50),
+    
+    constraint pk_cinstrutor primary key (id)
+);
+
+create table turma(
+	id int auto_increment,
+    id_curso int not null,
+    id_instrutor int not null,
+    sala varchar(10),
+    horario varchar(10),
+    
+    constraint pk_instrutor primary key (id),
+    constraint fk_curso foreign key (id_curso) references curso(id),
+	constraint fk_instrutor foreign key (id_instrutor) references instrutor(id)
+
+);
+
+INSERT INTO curso (nome) VALUES
+('Java'),
+('Banco de Dados'),
+('Python'),
+('Desenvolvimento Web'),
+('Engenharia de Software');
+
+INSERT INTO instrutor (nome) VALUES
+('Carlos Silva'),
+('Mariana Souza'),
+('Joao Santos'),
+('Ana Paula'),
+('Rafael Oliveira');
+
+INSERT INTO turma (id_curso, id_instrutor, sala, horario) VALUES
+(1, 1, 'A01', '08:00'),
+(2, 2, 'A02', '10:00'),
+(3, 3, 'B01', '14:00'),
+(4, 4, 'B02', '16:00'),
+(5, 5, 'C01', '19:00'),
+(1, 2, 'A03', '20:00');
+
+SELECT * FROM curso;
+
+SELECT * FROM instrutor;
+
+SELECT * FROM turma;
+
+
+create database ex10;
+use ex10;
+
+
+CREATE TABLE cargo(
+    id_cargo VARCHAR(10) NOT NULL,
+    nome_cargo VARCHAR(50),
+    salario_cargo DECIMAL(10,2),
+
+    CONSTRAINT pk_cargo PRIMARY KEY(id_cargo)
+);
+
+CREATE TABLE setor(
+    id_setor VARCHAR(10) NOT NULL,
+    nome_setor VARCHAR(50),
+
+    CONSTRAINT pk_setor PRIMARY KEY(id_setor)
+);
+
+CREATE TABLE funcionario(
+    id_func INT NOT NULL,
+    nome_func VARCHAR(50),
+    id_cargo VARCHAR(10),
+    id_setor VARCHAR(10),
+
+    CONSTRAINT pk_funcionario PRIMARY KEY(id_func),
+    CONSTRAINT fk_funcionario_cargo
+        FOREIGN KEY(id_cargo) REFERENCES cargo(id_cargo),
+    CONSTRAINT fk_funcionario_setor
+        FOREIGN KEY(id_setor) REFERENCES setor(id_setor)
+);
+
+INSERT INTO cargo (id_cargo, nome_cargo, salario_cargo) VALUES
+('C1', 'Analista', 3500.00),
+('C2', 'Assistente', 2200.00);
+
+INSERT INTO setor (id_setor, nome_setor) VALUES
+('S1', 'TI'),
+('S2', 'RH');
+
+INSERT INTO funcionario (id_func, nome_func, id_cargo, id_setor) VALUES
+(1, 'Paula', 'C1', 'S1'),
+(2, 'Rafael', 'C2', 'S2'),
+(3, 'Bianca', 'C1', 'S1'),
+(4, 'Diego', 'C2', 'S2');
+
+
+SELECT * FROM cargo;
+
+SELECT * FROM setor;
+
+SELECT * FROM funcionario;
+
